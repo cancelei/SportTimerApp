@@ -6,50 +6,53 @@ let segundos = 0;
 let minutos = 0;
 let horas = 0;
 
-
 export default function App() {
-  const [number, setNumber] = useState(0)
-  const [button, setButton] = useState('Start')
-  const [last, setLast] = useState(null)
+  const[numero,setNumero] = useState(0);
+  const[botao,setBotao] = useState('Iniciar');
+  const[Ultimo,setUltimo] = useState(null);
 
-  function start(){
+  function iniciar(){
     if(timer !== null){
-      clearInterval(timer)
-      timer = null
-      setButton('Start')
-  } else {
-    timer = setInterval(() => {
-      segundos++
-      if(segundos == 60){
-        segundos = 0
-        minutos++
-      }
-      if(minutos == 60){
-        minutos = 0
-        horas++
-      }
-      let format = (horas < 10 ? '0' + horas : horas) + ':' + (minutos < 10 ? '0' + minutos : minutos) + ':' + (segundos < 10 ? '0' + segundos : segundos)
-      setNumber(format)
-    }, 1000)
-    setButton('Stop')
+      clearInterval(timer);
+      timer = null;
+      setBotao('Iniciar');
+    }else{
+      timer = setInterval(() => {
+        segundos++;
+        
+        if (segundos >= 60) {
+            segundos = 0;
+            minutos++;
+        }
 
+        if(minutos >= 60){
+          minutos = 0;
+          horas++;
+        }
+
+        let formatado = (horas < 10? '0' + horas : horas) + ':' 
+        + (minutos < 10? '0' + minutos : minutos ) + ':' 
+        + (segundos < 10? '0' + segundos : segundos);
+        setNumero(formatado);
+      },100);
+      setBotao('Parar');
+    }
   }
-}
 
-function reset(){
-  if(timer !== null){
-    clearInterval(timer)
-    timer = null
+  function zerar(){
+    clearInterval(timer);
+    timer = null;
+    setUltimo(numero);
+    setNumero(0);
+    segundos = 0;
+    minutos = 0;
+    horas = 0;
+    setBotao('Iniciar');
+    console.log(Ultimo);
   }
-  setLast(number)
-  setNumber(0)
-  segundos = 0
-  minutos = 0
-  horas = 0
-  setButton('Start')
-}
 
- return (
+
+  return (
    <SafeAreaView style={styles.container}>
       <StatusBar  style= "auto"/>
    
@@ -59,19 +62,19 @@ function reset(){
       />
 
       <Text style={styles.texto}>
-        {number == 0 ? last : number}
+        {numero == 0? '00:00:00' : numero}
       </Text>
 
       <View style={styles.areaBtn}>
-        <TouchableOpacity style={styles.btn} onPress={}>
+        <TouchableOpacity style={styles.btn} onPress={ iniciar }>
           <Text style={styles.btnText}>
-            {button}
+              {botao}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={ zerar }>
           <Text style={styles.btnText}>
-              {reset}
+              Zerar
           </Text>
 
         </TouchableOpacity>
@@ -79,7 +82,7 @@ function reset(){
       </View>
 
       <Text style={styles.tempoMedido}>
-        Last measured time: 02:50:45
+        {Ultimo !== null? 'Ultimo tempo medido: ' + Ultimo : null}
       </Text>
    
    </SafeAreaView>
